@@ -1,0 +1,70 @@
+name: l3vpn
+
+# Topology:
+#            R4-P ---- R5-P
+#           /              \
+# CE1 -- R1-PE              R3-PE -- CE2
+#           \              /
+#            ---- R2-P ----
+#
+# Short path (te0): R1 -> R2 -> R3 (loopbacks 1.1.1.1 <-> 3.3.3.3)
+# Long path (te1):  R1 -> R4 -> R5 -> R3 (loopbacks 11.11.11.11 <-> 33.33.33.33)
+#
+# L2VPN (VPLS): cust-a and cust-b over te0/te1 tunnels
+# L3VPN: cust-c over R1-R4-R5-R3 path (signaled using LDP)
+#   - CE5-cust-c (192.168.35.0/24) connected to R1-PE
+#   - CE6-cust-c (192.168.36.0/24) connected to R3-PE
+
+topology:
+  nodes:
+    R1-PE:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R2-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R3-PE:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R4-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R5-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE1-cust-a:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE2-cust-a:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE3-cust-b:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE4-cust-b:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE5-cust-c:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE6-cust-c:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+  links:
+    [
+      # Short path: R1 -> R2 -> R3
+      { endpoints: [ "R1-PE:ether2", "R2-P:ether10" ] },
+      { endpoints: [ "R2-P:ether3", "R3-PE:ether2" ] },
+      # Long path (RSVP-TE): R1 -> R4 -> R5 -> R3
+      { endpoints: [ "R1-PE:ether4", "R4-P:ether10" ] },
+      { endpoints: [ "R4-P:ether5", "R5-P:ether4" ] },
+      { endpoints: [ "R5-P:ether3", "R3-PE:ether5" ] },
+      # CE connections - VPLS customers
+      { endpoints: [ "CE1-cust-a:ether8", "R1-PE:ether8" ] },
+      { endpoints: [ "CE2-cust-a:ether8", "R3-PE:ether8" ] },
+      { endpoints: [ "CE3-cust-b:ether7", "R1-PE:ether7" ] },
+      { endpoints: [ "CE4-cust-b:ether7", "R3-PE:ether7" ] },
+      # CE connections - L3VPN customer C
+      { endpoints: [ "CE5-cust-c:ether6", "R1-PE:ether6" ] },
+      { endpoints: [ "CE6-cust-c:ether6", "R3-PE:ether6" ] }
+    ]

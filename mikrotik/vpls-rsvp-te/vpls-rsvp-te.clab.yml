@@ -1,0 +1,56 @@
+name: vpls-rsvp-te
+
+# Topology:
+#            R4-P ---- R5-P
+#           /              \
+# CE1 -- R1-PE              R3-PE -- CE2
+#           \              /
+#            ---- R2-P ----
+#
+# Short path: R1 -> R2 -> R3
+# Long path (RSVP-TE): R1 -> R4 -> R5 -> R3 (strict hops)
+
+topology:
+  nodes:
+    CE1:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE2:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R1-PE:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R2-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R3-PE:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R4-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    R5-P:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE3-cust-b:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+    CE4-cust-b:
+      kind: mikrotik_ros
+      image: vrnetlab/mikrotik_routeros:7.23.2
+  links:
+    [
+      # Short path: R1 -> R2 -> R3
+      { endpoints: [ "R1-PE:ether2", "R2-P:ether10" ] },
+      { endpoints: [ "R2-P:ether3", "R3-PE:ether2" ] },
+      # Long path (RSVP-TE): R1 -> R4 -> R5 -> R3
+      { endpoints: [ "R1-PE:ether4", "R4-P:ether10" ] },
+      { endpoints: [ "R4-P:ether5", "R5-P:ether4" ] },
+      { endpoints: [ "R5-P:ether3", "R3-PE:ether5" ] },
+      # CE connections
+      { endpoints: [ "CE1:ether8", "R1-PE:ether8" ] },
+      { endpoints: [ "CE2:ether8", "R3-PE:ether8" ] },
+      { endpoints: [ "CE3-cust-b:ether7", "R1-PE:ether7" ] },
+      { endpoints: [ "CE4-cust-b:ether7", "R3-PE:ether7" ] }
+    ]

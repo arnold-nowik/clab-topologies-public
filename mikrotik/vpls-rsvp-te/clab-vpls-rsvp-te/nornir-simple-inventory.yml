@@ -1,0 +1,46 @@
+---
+CE1:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.9
+CE2:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.3
+CE3-cust-b:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.10
+CE4-cust-b:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.2
+R1-PE:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.8
+R2-P:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.7
+R3-PE:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.5
+R4-P:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.6
+R5-P:
+    username: admin
+    password: admin
+    platform: mikrotik_ros
+    hostname: 172.20.20.4
